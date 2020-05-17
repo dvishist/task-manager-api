@@ -14,9 +14,20 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true, useUnifiedTopology: 
 
 	const db = client.db(dbName)
 
-	db.collection('users').findOne({ name: 'Andrew' }, (error, result) => {
-		if (error) return console.log('Couldnt fetch data')
+	db.collection('users').updateOne(
+		{
+			_id: new ObjectID('5ec17535a3a5d3497cb09a11')
+		},
+		{
+			$set: {
+				name: 'Baburao'
+			}
+		}
+	).then(result => {
 		console.log(result)
+	}).catch((e) => {
+		console.log(e)
 	})
+
 
 })
