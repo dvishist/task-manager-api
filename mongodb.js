@@ -14,8 +14,8 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true, useUnifiedTopology: 
 
 	const db = client.db(dbName)
 
-	db.collection('task').deleteOne({ description: 'Buy groceries' })
-		.then(result => console.log(result))
+	db.collection('task').findOne({ description: 'learn Deno' })
+		.then(({ completed }) => console.log(completed))
 		.catch(e => console.log(e))
 
 })
