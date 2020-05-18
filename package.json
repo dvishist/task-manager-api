@@ -1,0 +1,27 @@
+{
+  "name": "task-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.9.14",
+    "mongodb": "^3.5.7",
+    "validator": "^13.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dvishist/task-manager-app.git"
+  },
+  "author": "vishist",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dvishist/task-manager-app/issues"
+  },
+  "homepage": "https://github.com/dvishist/task-manager-app#readme"
+}
