@@ -8,48 +8,62 @@ const port = process.env.PORT || 3000
 
 app.use(express.json())
 
-app.post('/users', (req, res) => {
+app.post('/users', async (req, res) => {
 	const user = new User(req.body)
-	user.save()
-		.then(() => res.status(201).send(user))
-		.catch(e => res.status(400).send(e))
+	try {
+		await user.save()
+		res.status(201).send(user)
+	} catch (e) {
+		res.status(400).send(e)
+	}
 })
 
-app.get('/users', (req, res) => {
-	User.find({})
-		.then(users => res.send(users))
-		.catch(e => res.status(500).send())
+app.get('/users', async (req, res) => {
+	try {
+		const users = await User.find({})
+		res.send(users)
+	} catch (e) {
+		res.status(500).send(e)
+	}
 })
 
-app.get('/users/:id', (req, res) => {
+app.get('/users/:id', async (req, res) => {
 	const userId = req.params.id
-	User.findById(userId)
-		.then(user => {
-			return user ? res.send(user) : res.status(404).send()
-		})
-		.catch(e => res.status(500).send())
+	try {
+		const user = await User.findById(userId)
+		return user ? res.send(user) : res.status(404).send()
+	} catch (e) {
+		res.status(500).send(e)
+	}
 })
 
-app.post('/tasks', (req, res) => {
+app.post('/tasks', async (req, res) => {
 	const task = new Task(req.body)
-	task.save()
-		.then(() => res.status(201).send(task))
-		.catch(e => res.status(400).send(e))
+	try {
+		await task.save()
+		res.status(201).send(task)
+	} catch (e) {
+		res.status(400).send(e)
+	}
 })
 
-app.get('/tasks', (req, res) => {
-	Task.find({})
-		.then(tasks => res.send(tasks))
-		.catch(e => res.status(500).send())
+app.get('/tasks', async (req, res) => {
+	try {
+		const tasks = await Task.find({})
+		res.send(tasks)
+	} catch (e) {
+		res.status(500).send()
+	}
 })
 
-app.get('/tasks:id', (req, res) => {
+app.get('/tasks/:id', async (req, res) => {
 	const taskId = req.params.id
-	Task.findById(taskId)
-		.then(task => {
-			return task ? res.send(task) : res.status(404).send()
-		})
-		.catch(e => res.status(500).send())
+	try {
+		const task = await Task.findById(taskId)
+		return task ? res.send(task) : res.status(404).send()
+	} catch {
+		res.status(500).send()
+	}
 })
 
 app.listen(port, () => {
