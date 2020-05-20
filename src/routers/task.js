@@ -25,7 +25,7 @@ router.get('/tasks/:id', async (req, res) => {
     const taskId = req.params.id
     try {
         const task = await Task.findById(taskId)
-        return task ? res.send(task) : res.status(404).send({ error: "Task not found" })
+        task ? res.send(task) : res.status(404).send({ error: "Task not found" })
     } catch (e) {
         res.status(500).send(e)
     }
@@ -40,7 +40,7 @@ router.patch('/tasks/:id', async (req, res) => {
         const task = await Task.findById(req.params.id)
         updates.forEach(update => task[update] = req.body[updates])
         await task.save()
-        return task ? res.send(task) : res.status(400).send({ error: "Task not found" })
+        task ? res.send(task) : res.status(400).send({ error: "Task not found" })
     } catch (e) {
         res.status(400).send(e)
     }
@@ -49,7 +49,7 @@ router.patch('/tasks/:id', async (req, res) => {
 router.delete('/tasks/:id', async (req, res) => {
     try {
         const task = await Task.findByIdAndDelete(req.params.id)
-        return task ? res.send(task) : res.status(404).send({ error: "Task not found" })
+        task ? res.send(task) : res.status(404).send({ error: "Task not found" })
     } catch (e) {
         res.status(500).send(e)
     }
