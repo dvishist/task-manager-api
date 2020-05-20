@@ -12,6 +12,15 @@ router.post('/users', async (req, res) => {
     }
 })
 
+router.post('/users/login', async (req, res) => {
+    try {
+        const user = await User.findByCredentials(req.body.email, req.body.password)
+        res.send(user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
 router.get('/users', async (req, res) => {
     try {
         const users = await User.find({})
@@ -39,8 +48,7 @@ router.patch('/users/:id', async (req, res) => {
     try {
         const user = await User.findById(req.params.id)
         updates.forEach(update => user[update] = req.body[update])
-        //const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
-
+        await user.save()
         return user ? res.send(user) : res.status(404).send({ error: "User not found" })
     } catch (e) {
         res.status(400).send(e)
