@@ -24,6 +24,29 @@ router.post('/users/login', async (req, res) => {
     }
 })
 
+router.post('/users/logout', auth, async (req, res) => {
+    try {
+        req.user.tokens = req.user.tokens.filter(tokenObj => tokenObj.token !== req.token)
+        console.log(req.user.tokens)
+        console.log(req.token)
+        await req.user.save()
+        res.send()
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+router.post('/users/logoutAll', auth, async (req, res) => {
+    try {
+        req.user.tokens = []
+        await req.user.save()
+        res.send()
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+
 router.get('/users/self', auth, async (req, res) => {
     res.send(req.user)
 })
@@ -34,7 +57,7 @@ router.get('/users/:id', async (req, res) => {
         const user = await User.findById(userId)
         user ? res.send(user) : res.status(404).send({ error: "User not found" })
     } catch (e) {
-        res.status(500).send(e)
+        res.status(500).send()
     }
 })
 
@@ -58,7 +81,7 @@ router.delete('/users/:id', async (req, res) => {
         const user = await User.findByIdAndDelete(req.params.id)
         user ? res.send(user) : res.status(404).send({ error: "User not found" })
     } catch (e) {
-        res.status(500).send(e)
+        res.status(500).send()
     }
 })
 
