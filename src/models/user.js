@@ -40,7 +40,10 @@ const userSchema = mongoose.Schema({
             type: String,
             required: true
         }
-    }]
+    }],
+    avatar: {
+        type: Buffer
+    }
 }, {
     timestamps: true
 })
@@ -64,6 +67,7 @@ userSchema.methods.toJSON = function () {
     const userObject = user.toObject()
     delete userObject.password
     delete userObject.tokens
+    delete userObject.avatar
     return userObject
 }
 
@@ -72,9 +76,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
     if (!user) throw new Error('Incorrect email or password')
 
     const isMatch = await bcrypt.compare(password, user.password)
-    if (!isMatch) {
-        throw new Error('Incorrect email or password')
-    }
+    if (!isMatch) throw new Error('Incorrect email or password')
     return user
 
 }
