@@ -51,35 +51,25 @@ router.get('/users/self', auth, async (req, res) => {
     res.send(req.user)
 })
 
-router.get('/users/:id', async (req, res) => {
-    const userId = req.params.id
-    try {
-        const user = await User.findById(userId)
-        user ? res.send(user) : res.status(404).send({ error: "User not found" })
-    } catch (e) {
-        res.status(500).send()
-    }
-})
-
-router.patch('/users/:id', async (req, res) => {
+router.patch('/users/self', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowed = ['name', 'email', 'age', 'password']
     const isAllowed = updates.every(update => allowed.includes(update))
     if (!isAllowed) return res.status(400).send({ error: 'Trying to add invalid updates!' })
     try {
-        const user = await User.findById(req.params.id)
+        const user = req.user
         updates.forEach(update => user[update] = req.body[update])
         await user.save()
-        user ? res.send(user) : res.status(404).send({ error: "User not found" })
+        res.send(user)
     } catch (e) {
         res.status(400).send(e)
     }
 })
 
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/self', auth, async (req, res) => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id)
-        user ? res.send(user) : res.status(404).send({ error: "User not found" })
+        await req.user.remove()
+        res.send(req.user)
     } catch (e) {
         res.status(500).send()
     }
