@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-
+const Task = require('./task')
 
 const userSchema = mongoose.Schema({
     name: {
@@ -41,6 +41,8 @@ const userSchema = mongoose.Schema({
             required: true
         }
     }]
+}, {
+    timestamps: true
 })
 
 userSchema.virtual('tasks', {
@@ -77,9 +79,19 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
 }
 
-userSchema.pre('save', async function () {
+//hash password before creating the account
+userSchema.pre('save', async function (next) {
     const user = this
     user.password = user.isModified('password') ? await bcrypt.hash(user.password, 8) : user.password
+    next()
+})
+
+
+//delete all tasks before deleting a user
+userSchema.pre('remove', async function (next) {
+    const user = this
+    await Task.deleteMany({ owner: user._id })
+    next()
 })
 
 const User = mongoose.model('User', userSchema)
