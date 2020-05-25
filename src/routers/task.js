@@ -16,7 +16,7 @@ router.post('/tasks', auth, async (req, res) => {
     }
 })
 
-// GET /tasks?completed=
+//GET /tasks?completed=
 //GET /tasks?limit=2&skip=2
 //GET /tasks?sortBy=createdAt:desc
 router.get('/tasks', auth, async (req, res) => {
